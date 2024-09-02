@@ -30,7 +30,7 @@ exports.seedUsers = async () => {
     const users = await User.find();
     if (users.length === 0) {
       await User.create([
-        { username: "admin", password: "adminpass", role: "admin" },
+        { username: "admin", password: "adminpass420123", role: "admin" },
         { username: "user", password: "userpass", role: "user" },
         { username: "spectator", password: "spectatorpass", role: "spectator" },
       ]);
