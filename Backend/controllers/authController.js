@@ -140,10 +140,12 @@ exports.seedUsers = async () => {
   try {
     const users = await User.find();
     if (users.length === 0) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('adminpass', salt);
       await User.create([
         {
           username: "admin",
-          password: "adminpass",
+          password: hashedPassword,
           role: "admin",
           email: "admin@example.com",
         },
