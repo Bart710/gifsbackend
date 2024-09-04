@@ -56,3 +56,21 @@ exports.updateMessage = async (req, res) => {
       .json({ message: "Error updating message", error: error.message });
   }
 };
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedMessage = await Message.findByIdAndDelete(id);
+
+    if (!deletedMessage) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    res.json({ message: "Message deleted successfully", deletedMessage });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error deleting message", error: error.message });
+  }
+};
