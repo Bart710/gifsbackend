@@ -2,6 +2,12 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error("JWT_SECRET is not set in environment variables");
+  process.exit(1);
+}
+
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -24,9 +30,10 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
     console.log(`Login successful for user: ${username}`);
     res.json({ token, role: user.role });
   } catch (error) {
@@ -141,7 +148,7 @@ exports.seedUsers = async () => {
     const users = await User.find();
     if (users.length === 0) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('adminpass', salt);
+      const hashedPassword = await bcrypt.hash("adminpass", salt);
       await User.create([
         {
           username: "admin",
